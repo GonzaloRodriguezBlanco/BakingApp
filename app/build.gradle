@@ -24,6 +24,7 @@ ext {
     butterknifeVersion = '8.7.0'
     timberVersion = '4.5.1'
     retrofitVersion = '2.3.0'
+    okhttpVersion = '3.8.0'
 }
 
 dependencies {
@@ -40,6 +41,7 @@ dependencies {
 
     compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
+    compile "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}"
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
