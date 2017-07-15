@@ -21,6 +21,7 @@ android {
 ext {
     // Libraries
     daggerVersion = '2.11'
+    butterknifeVersion = '8.7.0'
 }
 
 dependencies {
@@ -29,6 +30,10 @@ dependencies {
     compile "com.google.dagger:dagger-android:${daggerVersion}"
     compile "com.google.dagger:dagger-android-support:${daggerVersion}"
     annotationProcessor "com.google.dagger:dagger-android-processor:${daggerVersion}"
+
+    compile "com.jakewharton:butterknife:${butterknifeVersion}"
+    annotationProcessor "com.jakewharton:butterknife-compiler:${butterknifeVersion}"
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
