@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-    package="rodriguez_blanco.com.bakingapp">
+    package="com.rodriguez_blanco.bakingapp">
 
     <application
         android:allowBackup="true"
