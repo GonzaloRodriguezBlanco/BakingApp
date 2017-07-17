@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BakingApp</string>
+    <string name="title_activity_recipe_list">RecipeListActivity</string>
+    <string name="text_servings">%1$d servings</string>
 </resources>
