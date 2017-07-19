@@ -8,15 +8,15 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
-import com.rodriguez_blanco.bakingapp.domain.Recipe;
-import com.rodriguez_blanco.bakingapp.repository.RecipeRepository;
+import com.rodriguez_blanco.bakingapp.data.net.dto.RecipeDto;
+import com.rodriguez_blanco.bakingapp.data.repository.RecipeRepository;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 public class RecipeListViewModel extends ViewModel {
-    private LiveData<List<Recipe>> mRecipes;
+    private LiveData<List<RecipeDto>> mRecipes;
 
     private RecipeRepository mRecipeRepository;
 
@@ -25,9 +25,9 @@ public class RecipeListViewModel extends ViewModel {
         this.mRecipeRepository = mRecipeRepository;
     }
 
-    public LiveData<List<Recipe>> getRecipes() {
+    public LiveData<List<RecipeDto>> getRecipes() {
         if (mRecipes == null) {
-            mRecipes = new MutableLiveData<List<Recipe>>();
+            mRecipes = new MutableLiveData<List<RecipeDto>>();
             loadRecipes();
         }
         return mRecipes;

@@ -2,13 +2,13 @@
  * Copyright (c) 2017. Gonzalo Rodriguez Blanco
  */
 
-package com.rodriguez_blanco.bakingapp.domain;
+package com.rodriguez_blanco.bakingapp.data.net.dto;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Recipe {
+public class RecipeDto {
     @SerializedName("id")
     private long mId;
 
@@ -16,10 +16,10 @@ public class Recipe {
     private String mName;
 
     @SerializedName("ingredients")
-    private List<Ingredient> mIngredients;
+    private List<IngredientDto> mIngredients;
 
     @SerializedName("steps")
-    private List<Step> mSteps;
+    private List<StepDto> mSteps;
 
     @SerializedName("servings")
     private int mServings;
@@ -35,11 +35,11 @@ public class Recipe {
         return mName;
     }
 
-    public List<Ingredient> getIngredients() {
+    public List<IngredientDto> getIngredients() {
         return mIngredients;
     }
 
-    public List<Step> getSteps() {
+    public List<StepDto> getSteps() {
         return mSteps;
     }
 

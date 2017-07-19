@@ -8,7 +8,7 @@ import android.content.Context;
 
 import com.rodriguez_blanco.bakingapp.BakingApplication;
 import com.rodriguez_blanco.bakingapp.BuildConfig;
-import com.rodriguez_blanco.bakingapp.api.MiriamRecipesWebService;
+import com.rodriguez_blanco.bakingapp.data.net.api.MiriamRecipesWebService;
 
 import javax.inject.Singleton;
 

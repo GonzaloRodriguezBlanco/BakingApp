@@ -17,6 +17,13 @@ android {
 
         buildConfigField "String", "API_URL", apiProperties['url']
         buildConfigField "String", "IMAGE_URI_DEFAULT", apiProperties['default_recipe_image_uri']
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {
@@ -37,7 +44,7 @@ ext {
     retrofitVersion = '2.3.0'
     okhttpVersion = '3.8.0'
     picassoVersion = '2.5.2'
-    architectureComponentsVersion = '1.0.+'
+    architectureComponentsVersion = '1.0.0-alpha4'
 }
 
 dependencies {
@@ -61,6 +68,8 @@ dependencies {
     compile "android.arch.lifecycle:runtime:${architectureComponentsVersion}"
     compile "android.arch.lifecycle:extensions:${architectureComponentsVersion}"
     annotationProcessor "android.arch.lifecycle:compiler:${architectureComponentsVersion}"
+    compile "android.arch.persistence.room:runtime:${architectureComponentsVersion}"
+    annotationProcessor "android.arch.persistence.room:compiler:${architectureComponentsVersion}"
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

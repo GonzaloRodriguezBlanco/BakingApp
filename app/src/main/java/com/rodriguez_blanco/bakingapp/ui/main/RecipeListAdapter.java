@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.rodriguez_blanco.bakingapp.BuildConfig;
 import com.rodriguez_blanco.bakingapp.R;
-import com.rodriguez_blanco.bakingapp.domain.Recipe;
+import com.rodriguez_blanco.bakingapp.data.net.dto.RecipeDto;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder> {
 
-    private List<Recipe> mRecipes;
+    private List<RecipeDto> mRecipes;
 
     private RecipeListAdapterListener mListener;
 
@@ -50,7 +50,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     @Override
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
-        Recipe recipe = mRecipes.get(position);
+        RecipeDto recipe = mRecipes.get(position);
 
         holder.bind(recipe);
     }
@@ -63,7 +63,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         return 0;
     }
 
-    public void setRecipesData(List<Recipe> recipesData) {
+    public void setRecipesData(List<RecipeDto> recipesData) {
         mRecipes = recipesData;
         notifyDataSetChanged();
     }
@@ -84,7 +84,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             itemView.setOnClickListener(this);
         }
 
-        public void bind(Recipe recipe) {
+        public void bind(RecipeDto recipe) {
             Context context = this.itemView.getContext();
             name.setText(recipe.getName());
             servings.setText(context.getString(R.string.text_servings, recipe.getServings()));
@@ -111,7 +111,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
 
-            Recipe recipe = mRecipes.get(adapterPosition);
+            RecipeDto recipe = mRecipes.get(adapterPosition);
 
             mListener.onRecipeClicked(recipe.getId());
         }
