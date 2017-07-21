@@ -40,7 +40,7 @@ public class RecipeListFragment extends LifecycleFragment implements RecipeListA
     private RecipeListListener mListener;
 
     public interface RecipeListListener {
-        void onRecipeClicked(long recipeId);
+        void onRecipeClicked(long recipeId, String recipeName);
     }
 
     public RecipeListFragment() {
@@ -117,7 +117,7 @@ public class RecipeListFragment extends LifecycleFragment implements RecipeListA
     }
 
     @Override
-    public void onRecipeClicked(long recipeId) {
-        mListener.onRecipeClicked(recipeId);
+    public void onRecipeClicked(long recipeId, String recipeName) {
+        mListener.onRecipeClicked(recipeId, recipeName);
     }
 }

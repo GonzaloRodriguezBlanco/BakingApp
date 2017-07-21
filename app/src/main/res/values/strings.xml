@@ -2,4 +2,8 @@
     <string name="app_name">BakingApp</string>
     <string name="title_activity_recipe_list">RecipeListActivity</string>
     <string name="text_servings">%1$d servings</string>
+    <string name="text_step_item">%1$d. %2$s</string>
+    <string name="text_ingredient">\u2022 %2$.2f %3$s %1$s</string>
+    <string name="bt_prev">prev</string>
+    <string name="bt_next">next</string>
 </resources>

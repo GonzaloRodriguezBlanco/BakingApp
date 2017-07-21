@@ -4,6 +4,7 @@
 
 package com.rodriguez_blanco.bakingapp.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.rodriguez_blanco.bakingapp.R;
+import com.rodriguez_blanco.bakingapp.ui.recipe.RecipeActivity;
 
 import javax.inject.Inject;
 
@@ -21,6 +23,7 @@ import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
+import timber.log.Timber;
 
 public class RecipeListActivity extends AppCompatActivity implements
         HasSupportFragmentInjector,
@@ -65,7 +68,11 @@ public class RecipeListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onRecipeClicked(long recipeId) {
-        Toast.makeText(this, "RecipeId: " + recipeId, Toast.LENGTH_SHORT).show();
+    public void onRecipeClicked(long recipeId, String recipeName) {
+        Intent intent = RecipeActivity.getCallingIntent(this, recipeId, recipeName);
+
+        Timber.d("Launch RecipeActivity for recipeId: %d", recipeId);
+
+        startActivity(intent);
     }
 }

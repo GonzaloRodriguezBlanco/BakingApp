@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1b1af80c2cdc4c0a138efaa3cdc4aef0",
+    "identityHash": "f91322041f564e6fbec7c69cf85ca15a",
     "entities": [
       {
         "tableName": "recipes",
@@ -100,7 +100,7 @@
       },
       {
         "tableName": "steps",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `shortDescription` TEXT, `description` TEXT, `videoURL` TEXT, `thumbnailURL` TEXT, `recipe_id` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`recipe_id`) REFERENCES `recipes`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER, `shortDescription` TEXT, `description` TEXT, `videoURL` TEXT, `thumbnailURL` TEXT, `recipe_id` INTEGER, PRIMARY KEY(`id`, `recipe_id`), FOREIGN KEY(`recipe_id`) REFERENCES `recipes`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "mId",
@@ -135,7 +135,8 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "id",
+            "recipe_id"
           ],
           "autoGenerate": false
         },
@@ -166,7 +167,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1b1af80c2cdc4c0a138efaa3cdc4aef0\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f91322041f564e6fbec7c69cf85ca15a\")"
     ]
   }
 }

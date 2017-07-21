@@ -7,7 +7,9 @@ package com.rodriguez_blanco.bakingapp.di;
 import android.content.Context;
 
 import com.rodriguez_blanco.bakingapp.BakingApplication;
+import com.rodriguez_blanco.bakingapp.di.activity.RecipeActivityModule;
 import com.rodriguez_blanco.bakingapp.di.activity.RecipeListActivityModule;
+import com.rodriguez_blanco.bakingapp.di.activity.StepActivityModule;
 
 import javax.inject.Singleton;
 
@@ -18,7 +20,9 @@ import dagger.android.AndroidInjectionModule;
 @Component(modules = {
         AndroidInjectionModule.class,
         ApplicationModule.class,
-        RecipeListActivityModule.class
+        RecipeListActivityModule.class,
+        RecipeActivityModule.class,
+        StepActivityModule.class
 })
 public interface ApplicationComponent {
     @Component.Builder

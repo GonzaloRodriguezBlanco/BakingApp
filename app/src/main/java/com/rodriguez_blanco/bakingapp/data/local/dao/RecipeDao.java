@@ -19,13 +19,16 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 @Dao
 public interface RecipeDao {
     @Query("SELECT * FROM recipes")
-    LiveData<List<RecipeEntity>> getAll();
+    List<RecipeEntity> getAll();
 
     @Query("SELECT * FROM recipes WHERE id = :id")
-    LiveData<RecipeEntity> findById(long id);
+    RecipeEntity findById(long id);
 
     @Insert(onConflict = REPLACE)
     void insertAll(RecipeEntity... recipeEntities);
+
+    @Insert(onConflict = REPLACE)
+    void insert(RecipeEntity recipeEntity);
 
     @Delete
     void delete(RecipeEntity recipeEntity);

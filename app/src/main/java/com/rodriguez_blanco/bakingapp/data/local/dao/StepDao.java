@@ -4,7 +4,6 @@
 
 package com.rodriguez_blanco.bakingapp.data.local.dao;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -18,11 +17,14 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
 @Dao
 public interface StepDao {
-    @Query("SELECT * FROM steps WHERE recipe_id = :recipeId")
-    LiveData<List<StepEntity>> getAllByRecipe(long recipeId);
+    @Query("SELECT * FROM steps")
+    List<StepEntity> getAll();
 
-    @Query("SELECT * FROM steps WHERE id = :id")
-    LiveData<StepEntity> findById(long id);
+    @Query("SELECT * FROM steps WHERE recipe_id = :recipeId")
+    List<StepEntity> getAllByRecipe(long recipeId);
+
+    @Query("SELECT * FROM steps WHERE recipe_id = :recipeId and id = :stepId")
+    StepEntity findById(long recipeId, long stepId);
 
     @Insert(onConflict = REPLACE)
     void insertAll(StepEntity... stepEntities);

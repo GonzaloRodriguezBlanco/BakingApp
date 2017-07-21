@@ -11,6 +11,7 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity(tableName = "steps",
+        primaryKeys = {"id", "recipe_id"},
         indices = {
                 @Index(value = {"recipe_id"})
         },
@@ -21,7 +22,6 @@ import android.arch.persistence.room.PrimaryKey;
         )
 )
 public class StepEntity {
-    @PrimaryKey
     @ColumnInfo(name = "id")
     private long mId;
 

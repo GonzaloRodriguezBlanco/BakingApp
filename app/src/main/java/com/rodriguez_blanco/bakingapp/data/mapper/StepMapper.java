@@ -10,7 +10,13 @@ import com.rodriguez_blanco.bakingapp.data.net.dto.StepDto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class stepMapper {
+import javax.inject.Inject;
+
+public class StepMapper {
+
+    @Inject
+    public StepMapper() {
+    }
 
     public StepEntity map(StepDto stepDto, long recipeId) {
         return new StepEntity(

@@ -16,22 +16,24 @@ import android.widget.TextView;
 import com.rodriguez_blanco.bakingapp.BuildConfig;
 import com.rodriguez_blanco.bakingapp.R;
 import com.rodriguez_blanco.bakingapp.data.net.dto.RecipeDto;
+import com.rodriguez_blanco.bakingapp.domain.Recipe;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 
 public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.RecipeViewHolder> {
 
-    private List<RecipeDto> mRecipes;
+    private List<Recipe> mRecipes;
 
     private RecipeListAdapterListener mListener;
 
-    interface RecipeListAdapterListener {
-        void onRecipeClicked(long recipeId);
+    public interface RecipeListAdapterListener {
+        void onRecipeClicked(long recipeId, String recipeName);
     }
 
     public RecipeListAdapter(RecipeListAdapterListener recipeListAdapterListener) {
@@ -50,7 +52,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
 
     @Override
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
-        RecipeDto recipe = mRecipes.get(position);
+        Recipe recipe = mRecipes.get(position);
 
         holder.bind(recipe);
     }
@@ -63,7 +65,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         return 0;
     }
 
-    public void setRecipesData(List<RecipeDto> recipesData) {
+    public void setRecipesData(List<Recipe> recipesData) {
         mRecipes = recipesData;
         notifyDataSetChanged();
     }
@@ -84,7 +86,7 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
             itemView.setOnClickListener(this);
         }
 
-        public void bind(RecipeDto recipe) {
+        public void bind(Recipe recipe) {
             Context context = this.itemView.getContext();
             name.setText(recipe.getName());
             servings.setText(context.getString(R.string.text_servings, recipe.getServings()));
@@ -111,9 +113,10 @@ public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.Re
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
 
-            RecipeDto recipe = mRecipes.get(adapterPosition);
+            Recipe recipe = mRecipes.get(adapterPosition);
 
-            mListener.onRecipeClicked(recipe.getId());
+            Timber.d("Clicked recipe with recipeId: %d", recipe.getId());
+            mListener.onRecipeClicked(recipe.getId(), recipe.getName());
         }
     }
 }

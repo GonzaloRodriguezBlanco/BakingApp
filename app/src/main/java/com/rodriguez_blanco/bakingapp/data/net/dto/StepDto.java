@@ -50,7 +50,7 @@ public class StepDto {
         return mVideoUrl;
     }
 
-    public void setmVideoUrl(String videoUrl) {
+    public void setVideoUrl(String videoUrl) {
         this.mVideoUrl = videoUrl;
     }
 

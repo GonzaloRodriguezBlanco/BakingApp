@@ -10,7 +10,13 @@ import com.rodriguez_blanco.bakingapp.data.net.dto.IngredientDto;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class IngredientMapper {
+
+    @Inject
+    public IngredientMapper() {
+    }
 
     public IngredientEntity map(IngredientDto ingredientDto, long recipeId) {
         return new IngredientEntity(

@@ -19,7 +19,7 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 @Dao
 public interface IngredientDao {
     @Query("SELECT * FROM ingredients WHERE recipe_id = :recipeId")
-    LiveData<List<IngredientEntity>> getAllByRecipe(long recipeId);
+    List<IngredientEntity> getAllByRecipe(long recipeId);
 
     @Insert(onConflict = REPLACE)
     void insertAll(IngredientEntity... ingredientEntities);
