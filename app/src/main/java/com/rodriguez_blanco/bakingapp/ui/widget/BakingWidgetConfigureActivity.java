@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.LifecycleActivity;
 import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,10 +20,13 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.rodriguez_blanco.bakingapp.R;
+import com.rodriguez_blanco.bakingapp.domain.Ingredient;
 import com.rodriguez_blanco.bakingapp.domain.Recipe;
 import com.rodriguez_blanco.bakingapp.util.NetworkUtil;
 import com.rodriguez_blanco.bakingapp.util.RecipeUtil;
 import com.rodriguez_blanco.bakingapp.viewmodel.BakingWidgetConfigurationListViewModel;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -120,25 +124,31 @@ public class BakingWidgetConfigureActivity extends LifecycleActivity implements 
         if (!NetworkUtil.isNetworkAvailable(this)) {
             Timber.d("No network connection!");
         } else {
-            mViewModel.getRecipes().observe(this, recipes -> {
-                if (recipes != null) {
-                    mAdapter.setRecipesData(recipes);
-                }
+            mViewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
+                @Override
+                public void onChanged(@Nullable List<Recipe> recipes) {
+                    if (recipes != null) {
+                        mAdapter.setRecipesData(recipes);
+                    }
 
+                }
             });
         }
 
     }
 
     private void loadIngredients(long recipeId) {
-        mViewModel.getIngredients(recipeId).observe(this, ingredients -> {
-            if (ingredients != null) {
-                mRecipe.setIngredients(ingredients);
+        mViewModel.getIngredients(recipeId).observe(this, new Observer<List<Ingredient>>() {
+            @Override
+            public void onChanged(@Nullable List<Ingredient> ingredients) {
+                if (ingredients != null) {
+                    mRecipe.setIngredients(ingredients);
+                }
+
+                saveRecipePref(BakingWidgetConfigureActivity.this, mAppWidgetId, mRecipe);
+
+                BakingWidgetConfigureActivity.this.sendResult();
             }
-
-            saveRecipePref(this, mAppWidgetId, mRecipe);
-
-            sendResult();
         });
 
     }

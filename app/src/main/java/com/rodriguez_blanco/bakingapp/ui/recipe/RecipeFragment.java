@@ -5,6 +5,7 @@
 package com.rodriguez_blanco.bakingapp.ui.recipe;
 
 import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,10 +19,13 @@ import android.widget.TextView;
 
 import com.rodriguez_blanco.bakingapp.R;
 import com.rodriguez_blanco.bakingapp.domain.Ingredient;
+import com.rodriguez_blanco.bakingapp.domain.Step;
 import com.rodriguez_blanco.bakingapp.ui.main.RecipeListAdapter;
 import com.rodriguez_blanco.bakingapp.util.NetworkUtil;
 import com.rodriguez_blanco.bakingapp.viewmodel.RecipeListViewModel;
 import com.rodriguez_blanco.bakingapp.viewmodel.RecipeViewModel;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -123,21 +127,27 @@ public class RecipeFragment extends LifecycleFragment implements RecipeAdapter.R
     }
 
     private void loadRecipe(long recipeId) {
-        mViewModel.getIngredients(recipeId).observe(this, ingredients -> {
-            if (ingredients != null) {
-                mRecipeAdapter.setIngredientsData(ingredients);
-            }
+        mViewModel.getIngredients(recipeId).observe(this, new Observer<List<Ingredient>>() {
+            @Override
+            public void onChanged(@Nullable List<Ingredient> ingredients) {
+                if (ingredients != null) {
+                    mRecipeAdapter.setIngredientsData(ingredients);
+                }
 
+            }
         });
 
-        mViewModel.getSteps(recipeId).observe(this, steps -> {
-            if (steps != null) {
-                mRecipeAdapter.setStepsData(steps);
-                if (mSelectedItem != RecyclerView.NO_POSITION) {
-                    mRecipeAdapter.setSelected(mSelectedItem);
+        mViewModel.getSteps(recipeId).observe(this, new Observer<List<Step>>() {
+            @Override
+            public void onChanged(@Nullable List<Step> steps) {
+                if (steps != null) {
+                    mRecipeAdapter.setStepsData(steps);
+                    if (mSelectedItem != RecyclerView.NO_POSITION) {
+                        mRecipeAdapter.setSelected(mSelectedItem);
+                    }
                 }
-            }
 
+            }
         });
 
     }

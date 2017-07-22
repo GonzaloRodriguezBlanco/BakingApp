@@ -5,6 +5,7 @@
 package com.rodriguez_blanco.bakingapp.ui.step;
 
 import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -157,23 +158,29 @@ public class StepViewPagerFragment extends LifecycleFragment {
         });
     }
 
-    private void loadStep(long recipeId, long selectedStepId, Bundle savedInstanceState) {
+    private void loadStep(long recipeId, final long selectedStepId, final Bundle savedInstanceState) {
 
-            mViewModel.getSteps(recipeId).observe(this, steps -> {
-                if (steps != null) {
-                    mPagerAdapter.setStepsData(steps);
-                    if (savedInstanceState != null) {
-                        int viewPagerPosition = savedInstanceState.getInt(INSTANCE_STATE_PAGER_POSITION);
-                        mViewModel.initializeSelectedPosition(viewPagerPosition);
-                    }
-                    mViewModel.getSelectedPosition(selectedStepId).observe(this, selectedPosition -> {
-                        Timber.d("Selected ViewPager position: %d", selectedPosition);
-                        if (selectedPosition != null) {
-                            mViewPager.setCurrentItem(selectedPosition, false);
-                            setNavigationButtonsVisibility(selectedPosition);
+            mViewModel.getSteps(recipeId).observe(this, new Observer<List<Step>>() {
+                @Override
+                public void onChanged(@Nullable List<Step> steps) {
+                    if (steps != null) {
+                        mPagerAdapter.setStepsData(steps);
+                        if (savedInstanceState != null) {
+                            int viewPagerPosition = savedInstanceState.getInt(INSTANCE_STATE_PAGER_POSITION);
+                            mViewModel.initializeSelectedPosition(viewPagerPosition);
                         }
+                        mViewModel.getSelectedPosition(selectedStepId).observe(StepViewPagerFragment.this, new Observer<Integer>() {
+                            @Override
+                            public void onChanged(@Nullable Integer selectedPosition) {
+                                Timber.d("Selected ViewPager position: %d", selectedPosition);
+                                if (selectedPosition != null) {
+                                    mViewPager.setCurrentItem(selectedPosition, false);
+                                    StepViewPagerFragment.this.setNavigationButtonsVisibility(selectedPosition);
+                                }
 
-                    });
+                            }
+                        });
+                    }
                 }
             });
     }

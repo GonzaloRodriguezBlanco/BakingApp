@@ -40,23 +40,32 @@ public class StepRepositoryImpl implements StepRepository {
     }
 
     @Override
-    public LiveData<List<Step>> steps(Long recipeId) {
-        mAppExecutors.diskIO().execute(()-> {
-            loadFromDb(recipeId);
+    public LiveData<List<Step>> steps(final Long recipeId) {
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                StepRepositoryImpl.this.loadFromDb(recipeId);
+            }
         });
 
         return mSteps;
     }
 
     @Override
-    public LiveData<Step> step(Long recipeId, Long stepId) {
-        mAppExecutors.diskIO().execute(() -> {
-            StepEntity stepEntity = mStepDao.findById(recipeId, stepId);
-            Step step = mStepEntityToDomainMapper.transform(stepEntity);
+    public LiveData<Step> step(final Long recipeId, final Long stepId) {
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                StepEntity stepEntity = mStepDao.findById(recipeId, stepId);
+                final Step step = mStepEntityToDomainMapper.transform(stepEntity);
 
-            mAppExecutors.mainThread().execute(() -> {
-                mStep.setValue(step);
-            });
+                mAppExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        mStep.setValue(step);
+                    }
+                });
+            }
         });
 
         return mStep;
@@ -66,12 +75,15 @@ public class StepRepositoryImpl implements StepRepository {
         Timber.i("Load from db");
         List<StepEntity> stepEntities = mStepDao.getAllByRecipe(recipeId);
 
-        List<Step> steps = new ArrayList<>();
+        final List<Step> steps = new ArrayList<>();
         for (StepEntity stepEntity:stepEntities) {
             steps.add(mStepEntityToDomainMapper.transform(stepEntity));
         }
-        mAppExecutors.mainThread().execute(() -> {
-            mSteps.setValue(steps);
+        mAppExecutors.mainThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                mSteps.setValue(steps);
+            }
         });
     }
 }

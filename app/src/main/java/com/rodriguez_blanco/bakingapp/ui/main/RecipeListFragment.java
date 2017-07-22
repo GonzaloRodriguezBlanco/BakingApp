@@ -5,6 +5,7 @@
 package com.rodriguez_blanco.bakingapp.ui.main;
 
 import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,8 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.rodriguez_blanco.bakingapp.R;
+import com.rodriguez_blanco.bakingapp.domain.Recipe;
 import com.rodriguez_blanco.bakingapp.util.NetworkUtil;
 import com.rodriguez_blanco.bakingapp.viewmodel.RecipeListViewModel;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -96,10 +100,13 @@ public class RecipeListFragment extends LifecycleFragment implements RecipeListA
         if (!NetworkUtil.isNetworkAvailable(context)) {
             Timber.d("No network connection!");
         } else {
-            mViewModel.getRecipes().observe(this, recipes -> {
-                if (recipes != null) {
-                    mRecipeListAdapter.setRecipesData(recipes);
-                    mListener.onFinishLoading();
+            mViewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
+                @Override
+                public void onChanged(@Nullable List<Recipe> recipes) {
+                    if (recipes != null) {
+                        mRecipeListAdapter.setRecipesData(recipes);
+                        mListener.onFinishLoading();
+                    }
                 }
             });
         }

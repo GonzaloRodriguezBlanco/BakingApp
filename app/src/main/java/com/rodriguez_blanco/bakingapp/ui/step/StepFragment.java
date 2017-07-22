@@ -5,6 +5,7 @@
 package com.rodriguez_blanco.bakingapp.ui.step;
 
 import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -42,6 +43,7 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.rodriguez_blanco.bakingapp.R;
+import com.rodriguez_blanco.bakingapp.domain.Step;
 import com.rodriguez_blanco.bakingapp.ui.recipe.RecipeAdapter;
 import com.rodriguez_blanco.bakingapp.viewmodel.RecipeViewModel;
 import com.rodriguez_blanco.bakingapp.viewmodel.StepViewModel;
@@ -121,21 +123,24 @@ public class StepFragment extends LifecycleFragment implements ExoPlayer.EventLi
 
     private void loadStep(long recipeId, long stepId) {
 
-            mViewModel.getStep(recipeId, stepId).observe(this, step -> {
-                if (step != null) {
-                    mStepInstructions.setText(step.getDescription());
-                    String videoUrl = step.getVideoUrl();
-                    String thumbnailUrl = step.getThumbnailUrl();
+            mViewModel.getStep(recipeId, stepId).observe(this, new Observer<Step>() {
+                @Override
+                public void onChanged(@Nullable Step step) {
+                    if (step != null) {
+                        mStepInstructions.setText(step.getDescription());
+                        String videoUrl = step.getVideoUrl();
+                        String thumbnailUrl = step.getThumbnailUrl();
 
-                    if (videoUrl != null && (videoUrl.length() > 0)) {
-                        initializePlayer(Uri.parse(videoUrl));
-                    } else if (thumbnailUrl != null && (thumbnailUrl.length() > 0)){
-                        initializePlayer(Uri.parse(thumbnailUrl));
-                    } else {
-                        mVideoPlayerView.setVisibility(View.GONE);
+                        if (videoUrl != null && (videoUrl.length() > 0)) {
+                            StepFragment.this.initializePlayer(Uri.parse(videoUrl));
+                        } else if (thumbnailUrl != null && (thumbnailUrl.length() > 0)) {
+                            StepFragment.this.initializePlayer(Uri.parse(thumbnailUrl));
+                        } else {
+                            mVideoPlayerView.setVisibility(View.GONE);
+                        }
                     }
-                }
 
+                }
             });
 
     }

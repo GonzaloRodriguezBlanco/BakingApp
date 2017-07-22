@@ -38,9 +38,12 @@ public class IngredientRepositoryImpl implements IngredientRepository {
     }
 
     @Override
-    public LiveData<List<Ingredient>> ingredients(Long recipeId) {
-        mAppExecutors.diskIO().execute(()-> {
-            loadFromDb(recipeId);
+    public LiveData<List<Ingredient>> ingredients(final Long recipeId) {
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                IngredientRepositoryImpl.this.loadFromDb(recipeId);
+            }
         });
 
         return mIngredients;
@@ -50,13 +53,16 @@ public class IngredientRepositoryImpl implements IngredientRepository {
         Timber.i("Load from db");
         List<IngredientEntity> ingredientEntities = mIngredientDao.getAllByRecipe(recipeId);
 
-        List<Ingredient> ingredients = new ArrayList<>();
+        final List<Ingredient> ingredients = new ArrayList<>();
         for (IngredientEntity stepEntity:ingredientEntities) {
             ingredients.add(mIngredientEntityToDomainMapper.transform(stepEntity));
         }
 
-        mAppExecutors.mainThread().execute(() -> {
-            mIngredients.setValue(ingredients);
+        mAppExecutors.mainThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                mIngredients.setValue(ingredients);
+            }
         });
     }
 }

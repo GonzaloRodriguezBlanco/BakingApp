@@ -81,30 +81,33 @@ public class RecipeRepositoryImpl implements RecipeRepository {
                         int code = response.code();
 
                         if (isSuccessful) {
-                            List<RecipeDto> recipes = response.body();
+                            final List<RecipeDto> recipes = response.body();
 
-                            mAppExecutors.diskIO().execute(() -> {
-                                mAppDatabase.beginTransaction();
-                                try {
+                            mAppExecutors.diskIO().execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mAppDatabase.beginTransaction();
+                                    try {
 
-                                    for (RecipeDto recipeDto : recipes) {
-                                        long recipeDtoId = recipeDto.getId();
-                                        mRecipeDao.insert(mRecipeMapper.map(recipeDto));
+                                        for (RecipeDto recipeDto : recipes) {
+                                            long recipeDtoId = recipeDto.getId();
+                                            mRecipeDao.insert(mRecipeMapper.map(recipeDto));
 
-                                        List<IngredientEntity> ingredientEntities = mIngredientMapper.map(recipeDto.getIngredients(), recipeDtoId);
-                                        mIngredientDao.insertAll(ingredientEntities.toArray(new IngredientEntity[ingredientEntities.size()]));
+                                            List<IngredientEntity> ingredientEntities = mIngredientMapper.map(recipeDto.getIngredients(), recipeDtoId);
+                                            mIngredientDao.insertAll(ingredientEntities.toArray(new IngredientEntity[ingredientEntities.size()]));
 
-                                        List<StepEntity> stepEntities = mStepMapper.map(recipeDto.getSteps(), recipeDtoId);
-                                        mStepDao.insertAll(stepEntities.toArray(new StepEntity[stepEntities.size()]));
+                                            List<StepEntity> stepEntities = mStepMapper.map(recipeDto.getSteps(), recipeDtoId);
+                                            mStepDao.insertAll(stepEntities.toArray(new StepEntity[stepEntities.size()]));
+                                        }
+                                        mAppDatabase.setTransactionSuccessful();
+                                    } catch (Exception e) {
+                                        Timber.e(e, e.getMessage());
+                                    } finally {
+                                        mAppDatabase.endTransaction();
                                     }
-                                    mAppDatabase.setTransactionSuccessful();
-                                } catch (Exception e) {
-                                    Timber.e(e, e.getMessage());
-                                } finally {
-                                    mAppDatabase.endTransaction();
-                                }
 
-                                loadFromDb();
+                                    loadFromDb();
+                                }
                             });
                         }
                     }
@@ -120,8 +123,11 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
     @Override
     public LiveData<List<Recipe>> recipes() {
-        mAppExecutors.diskIO().execute(()-> {
-            loadFromDb();
+        mAppExecutors.diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                RecipeRepositoryImpl.this.loadFromDb();
+            }
         });
 
         return mRecipes;
@@ -134,12 +140,15 @@ public class RecipeRepositoryImpl implements RecipeRepository {
         if (recipeEntities == null || recipeEntities.size() == 0) {
             fetchFromNetwork();
         } else {
-            List<Recipe> recipes = new ArrayList<>();
+            final List<Recipe> recipes = new ArrayList<>();
             for (RecipeEntity recipeEntity:recipeEntities) {
                 recipes.add(mRecipeEntityToDomainMapper.transform(recipeEntity, null, null));
             }
-            mAppExecutors.mainThread().execute(() -> {
-                mRecipes.setValue(recipes);
+            mAppExecutors.mainThread().execute(new Runnable() {
+                @Override
+                public void run() {
+                    mRecipes.setValue(recipes);
+                }
             });
         }
     }
