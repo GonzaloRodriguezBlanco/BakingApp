@@ -122,9 +122,7 @@ public class StepFragment extends LifecycleFragment implements ExoPlayer.EventLi
     private void loadStep(long recipeId, long stepId) {
 
             mViewModel.getStep(recipeId, stepId).observe(this, step -> {
-                if (step == null) {
-//                    showUnknownError();
-                } else {
+                if (step != null) {
                     mStepInstructions.setText(step.getDescription());
                     String videoUrl = step.getVideoUrl();
                     String thumbnailUrl = step.getThumbnailUrl();
@@ -136,7 +134,6 @@ public class StepFragment extends LifecycleFragment implements ExoPlayer.EventLi
                     } else {
                         mVideoPlayerView.setVisibility(View.GONE);
                     }
-//                    hideLoadingIndicator();
                 }
 
             });

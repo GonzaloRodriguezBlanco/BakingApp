@@ -160,9 +160,7 @@ public class StepViewPagerFragment extends LifecycleFragment {
     private void loadStep(long recipeId, long selectedStepId, Bundle savedInstanceState) {
 
             mViewModel.getSteps(recipeId).observe(this, steps -> {
-                if (steps == null) {
-//                    showUnknownError();
-                } else {
+                if (steps != null) {
                     mPagerAdapter.setStepsData(steps);
                     if (savedInstanceState != null) {
                         int viewPagerPosition = savedInstanceState.getInt(INSTANCE_STATE_PAGER_POSITION);
@@ -170,16 +168,12 @@ public class StepViewPagerFragment extends LifecycleFragment {
                     }
                     mViewModel.getSelectedPosition(selectedStepId).observe(this, selectedPosition -> {
                         Timber.d("Selected ViewPager position: %d", selectedPosition);
-                        if (selectedPosition == null) {
-//                    showUnknownError();
-                        } else {
+                        if (selectedPosition != null) {
                             mViewPager.setCurrentItem(selectedPosition, false);
                             setNavigationButtonsVisibility(selectedPosition);
-//                    hideLoadingIndicator();
                         }
 
                     });
-//                    hideLoadingIndicator();
                 }
             });
     }

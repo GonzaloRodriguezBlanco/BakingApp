@@ -96,17 +96,11 @@ public class RecipeListFragment extends LifecycleFragment implements RecipeListA
         if (!NetworkUtil.isNetworkAvailable(context)) {
             Timber.d("No network connection!");
         } else {
-//            showLoadingIndicator();
-//            mViewModel.init();
             mViewModel.getRecipes().observe(this, recipes -> {
-                if (recipes == null) {
-//                    showUnknownError();
-                } else {
+                if (recipes != null) {
                     mRecipeListAdapter.setRecipesData(recipes);
                     mListener.onFinishLoading();
-//                    hideLoadingIndicator();
                 }
-
             });
         }
 

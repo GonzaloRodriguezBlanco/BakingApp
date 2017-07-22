@@ -123,28 +123,22 @@ public class RecipeFragment extends LifecycleFragment implements RecipeAdapter.R
     }
 
     private void loadRecipe(long recipeId) {
-            mViewModel.getIngredients(recipeId).observe(this, ingredients -> {
-                if (ingredients == null) {
-//                    showUnknownError();
-                } else {
-                    mRecipeAdapter.setIngredientsData(ingredients);
-//                    hideLoadingIndicator();
+        mViewModel.getIngredients(recipeId).observe(this, ingredients -> {
+            if (ingredients != null) {
+                mRecipeAdapter.setIngredientsData(ingredients);
+            }
+
+        });
+
+        mViewModel.getSteps(recipeId).observe(this, steps -> {
+            if (steps != null) {
+                mRecipeAdapter.setStepsData(steps);
+                if (mSelectedItem != RecyclerView.NO_POSITION) {
+                    mRecipeAdapter.setSelected(mSelectedItem);
                 }
+            }
 
-            });
-
-            mViewModel.getSteps(recipeId).observe(this, steps -> {
-                if (steps == null) {
-//                    showUnknownError();
-                } else {
-                    mRecipeAdapter.setStepsData(steps);
-                    if (mSelectedItem != RecyclerView.NO_POSITION) {
-                        mRecipeAdapter.setSelected(mSelectedItem);
-                    }
-//                    hideLoadingIndicator();
-                }
-
-            });
+        });
 
     }
 
