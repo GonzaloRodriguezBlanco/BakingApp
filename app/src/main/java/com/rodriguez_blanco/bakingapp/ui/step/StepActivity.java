@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.rodriguez_blanco.bakingapp.R;
 
@@ -32,6 +33,7 @@ public class StepActivity extends AppCompatActivity implements
     private static final String INTENT_EXTRA_PARAM_STEP_ID = "com.rodriguez_blanco.INTENT_PARAM_STEP_ID";
     private static final String INTENT_EXTRA_PARAM_RECIPE_NAME = "com.rodriguez_blanco.INTENT_PARAM_RECIPE_NAME";
 
+    private View mDecorView;
     @Inject
     DispatchingAndroidInjector<Fragment> fragmentInjector;
 
@@ -57,6 +59,8 @@ public class StepActivity extends AppCompatActivity implements
         long recipeId = extras.getLong(INTENT_EXTRA_PARAM_STEP_RECIPE_ID);
         long stepId = extras.getLong(INTENT_EXTRA_PARAM_STEP_ID);
         String recipeName = getIntent().getStringExtra(INTENT_EXTRA_PARAM_RECIPE_NAME);
+
+        mDecorView = getWindow().getDecorView();
 
         ButterKnife.bind(this);
 
@@ -105,5 +109,28 @@ public class StepActivity extends AppCompatActivity implements
     @Override
     public void onStepSelected(int position) {
         // Not used in mobile mode
+    }
+
+    // This snippet hides the system bars.
+    private void hideSystemUI() {
+        // Set the IMMERSIVE flag.
+        // Set the content to appear under the system bars so that the content
+        // doesn't resize when the system bars hide and show.
+        mDecorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+    }
+
+    // This snippet shows the system bars. It does this by removing all the flags
+// except for the ones that make the content appear under the system bars.
+    private void showSystemUI() {
+        mDecorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 }

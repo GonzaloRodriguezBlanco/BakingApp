@@ -45,6 +45,7 @@ ext {
     okhttpVersion = '3.8.0'
     picassoVersion = '2.5.2'
     architectureComponentsVersion = '1.0.0-alpha4'
+    exoplayerVersion = 'r2.4.4'
 }
 
 dependencies {
@@ -70,6 +71,8 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:${architectureComponentsVersion}"
     compile "android.arch.persistence.room:runtime:${architectureComponentsVersion}"
     annotationProcessor "android.arch.persistence.room:compiler:${architectureComponentsVersion}"
+
+    compile "com.google.android.exoplayer:exoplayer:${exoplayerVersion}"
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

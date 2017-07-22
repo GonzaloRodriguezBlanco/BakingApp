@@ -3,26 +3,25 @@
   ~ Copyright (c) 2017. Gonzalo Rodriguez Blanco
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <FrameLayout
-            android:id="@+id/video_frame"
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/video_player_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"/>
+            android:layout_height="wrap_content"/>
 
         <TextView
             android:id="@+id/step_instructions"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
-</FrameLayout>
+
+</ScrollView>
