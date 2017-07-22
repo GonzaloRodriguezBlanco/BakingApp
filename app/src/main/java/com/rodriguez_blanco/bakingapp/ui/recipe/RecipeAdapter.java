@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.rodriguez_blanco.bakingapp.R;
 import com.rodriguez_blanco.bakingapp.domain.Ingredient;
 import com.rodriguez_blanco.bakingapp.domain.Step;
+import com.rodriguez_blanco.bakingapp.util.RecipeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,20 +178,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public void bind(List<Ingredient> ingredients) {
             Context context = this.itemView.getContext();
-            String ingredientsText = "";
-            for (Ingredient ingredient:ingredients) {
-                ingredientsText += context.getString(
-                        R.string.text_ingredient,
-                        ingredient.getName(),
-                        ingredient.getQuantity(),
-                        ingredient.getMeasure());
-                boolean isLast = ingredients.indexOf(ingredient) == ingredients.size() -1;
-                if (!isLast) {
-                    ingredientsText += "\n";
-                }
-            }
 
-            mIngredientsDisplay.setText(ingredientsText);
+            mIngredientsDisplay.setText(RecipeUtil.ingredientListToString(context, ingredients));
 
         }
     }

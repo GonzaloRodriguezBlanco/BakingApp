@@ -7,6 +7,7 @@ package com.rodriguez_blanco.bakingapp.di;
 import android.content.Context;
 
 import com.rodriguez_blanco.bakingapp.BakingApplication;
+import com.rodriguez_blanco.bakingapp.di.activity.BakingWidgetConfigureActivityModule;
 import com.rodriguez_blanco.bakingapp.di.activity.RecipeActivityModule;
 import com.rodriguez_blanco.bakingapp.di.activity.RecipeListActivityModule;
 import com.rodriguez_blanco.bakingapp.di.activity.StepActivityModule;
@@ -22,7 +23,8 @@ import dagger.android.AndroidInjectionModule;
         ApplicationModule.class,
         RecipeListActivityModule.class,
         RecipeActivityModule.class,
-        StepActivityModule.class
+        StepActivityModule.class,
+        BakingWidgetConfigureActivityModule.class
 })
 public interface ApplicationComponent {
     @Component.Builder

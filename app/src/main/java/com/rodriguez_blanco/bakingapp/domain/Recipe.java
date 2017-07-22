@@ -56,4 +56,8 @@ public class Recipe {
     public String getImage() {
         return mImage;
     }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.mIngredients = ingredients;
+    }
 }
