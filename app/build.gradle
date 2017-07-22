@@ -79,6 +79,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
+    compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'

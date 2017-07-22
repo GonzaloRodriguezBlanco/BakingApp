@@ -6,6 +6,10 @@ package com.rodriguez_blanco.bakingapp.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +39,10 @@ public class RecipeListActivity extends AppCompatActivity implements
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
+    // The Idling Resource which will be null in production.
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
@@ -45,6 +53,9 @@ public class RecipeListActivity extends AppCompatActivity implements
 
         initializeActionBar();
         initializeFragment(savedInstanceState);
+        if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(false);
+        }
     }
 
     private void initializeActionBar() {
@@ -74,5 +85,24 @@ public class RecipeListActivity extends AppCompatActivity implements
         Timber.d("Launch RecipeActivity for recipeId: %d", recipeId);
 
         startActivity(intent);
+    }
+
+    @Override
+    public void onFinishLoading() {
+        if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(true);
+        }
+    }
+
+    /**
+     * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
+     */
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
     }
 }

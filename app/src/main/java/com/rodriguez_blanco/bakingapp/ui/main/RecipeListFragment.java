@@ -41,6 +41,7 @@ public class RecipeListFragment extends LifecycleFragment implements RecipeListA
 
     public interface RecipeListListener {
         void onRecipeClicked(long recipeId, String recipeName);
+        void onFinishLoading();
     }
 
     public RecipeListFragment() {
@@ -102,6 +103,7 @@ public class RecipeListFragment extends LifecycleFragment implements RecipeListA
 //                    showUnknownError();
                 } else {
                     mRecipeListAdapter.setRecipesData(recipes);
+                    mListener.onFinishLoading();
 //                    hideLoadingIndicator();
                 }
 
