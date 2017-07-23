@@ -9,6 +9,7 @@ import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -98,7 +99,20 @@ public class RecipeListFragment extends LifecycleFragment implements RecipeListA
     private void loadRecipes() {
         Context context = getActivity();
         if (!NetworkUtil.isNetworkAvailable(context)) {
-            Timber.d("No network connection!");
+            String noNetworkMessage = getString(R.string.no_network_error);
+            Timber.d(noNetworkMessage);
+            Snackbar snackbar = Snackbar.make(
+                    getActivity().findViewById(R.id.coordinator_layout),
+                    noNetworkMessage,
+                    Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction(R.string.network_error_try_again, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    RecipeListFragment.this.loadRecipes();
+                }
+            });
+
+            snackbar.show();
         } else {
             mViewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
                 @Override
