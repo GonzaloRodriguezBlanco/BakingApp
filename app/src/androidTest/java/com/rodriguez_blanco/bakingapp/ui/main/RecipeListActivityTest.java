@@ -8,12 +8,16 @@ package com.rodriguez_blanco.bakingapp.ui.main;
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.widget.RecyclerView;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.TextView;
 
 import com.rodriguez_blanco.bakingapp.R;
 
@@ -42,15 +46,21 @@ public class RecipeListActivityTest {
     public ActivityTestRule<RecipeListActivity> mActivityTestRule = new ActivityTestRule<>(RecipeListActivity.class);
 
     private IdlingResource mIdlingResource;
+    private RecipeListActivity mActivity;
 
     @Before
     public void registerIdlingResource() {
-        mIdlingResource = mActivityTestRule.getActivity().getIdlingResource();
+        mActivity = mActivityTestRule.getActivity();
+        mIdlingResource = mActivity.getIdlingResource();
         Espresso.registerIdlingResources(mIdlingResource);
     }
 
     @Test
     public void recipeListActivityTest() {
+        onView(withId(R.id.recipe_list_recycler_view))
+                .perform(RecyclerViewActions.scrollToHolder(
+                        withRecipeNameInTextView("Nutella Pie")));
+
         ViewInteraction textView = onView(
                 allOf(withId(R.id.recipe_name_text_view), withText("Nutella Pie"),
                         childAtPosition(
@@ -61,25 +71,38 @@ public class RecipeListActivityTest {
                         isDisplayed()));
         textView.check(matches(withText("Nutella Pie")));
 
+
+        onView(withId(R.id.recipe_list_recycler_view))
+                .perform(RecyclerViewActions.scrollToHolder(
+                        withRecipeNameInTextView("Brownies")));
+
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.recipe_name_text_view), withText("Brownies"),
+        allOf(withId(R.id.recipe_name_text_view), withText("Brownies"),
+                childAtPosition(
                         childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
-                                        1),
-                                0),
-                        isDisplayed()));
+                                IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
+                                1),
+                        0),
+                isDisplayed()));
         textView2.check(matches(withText("Brownies")));
 
+        onView(withId(R.id.recipe_list_recycler_view))
+                .perform(RecyclerViewActions.scrollToHolder(
+                        withRecipeNameInTextView("Yellow Cake")));
+
         ViewInteraction textView3 = onView(
-                allOf(withId(R.id.recipe_name_text_view), withText("Yellow Cake"),
+        allOf(withId(R.id.recipe_name_text_view), withText("Yellow Cake"),
+                childAtPosition(
                         childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
-                                        1),
-                                0),
-                        isDisplayed()));
+                                IsInstanceOf.<View>instanceOf(android.widget.RelativeLayout.class),
+                                1),
+                        0),
+                isDisplayed()));
         textView3.check(matches(withText("Yellow Cake")));
+
+        onView(withId(R.id.recipe_list_recycler_view))
+                .perform(RecyclerViewActions.scrollToHolder(
+                        withRecipeNameInTextView("Cheesecake")));
 
         ViewInteraction textView4 = onView(
                 allOf(withId(R.id.recipe_name_text_view), withText("Cheesecake"),
@@ -117,5 +140,24 @@ public class RecipeListActivityTest {
         if (mIdlingResource != null) {
             Espresso.unregisterIdlingResources(mIdlingResource);
         }
+    }
+
+    public static Matcher<RecyclerView.ViewHolder> withRecipeNameInTextView(final String text) {
+        return new BoundedMatcher<RecyclerView.ViewHolder, RecipeListAdapter.RecipeViewHolder>(RecipeListAdapter.RecipeViewHolder.class) {
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("No ViewHolder found with text: " + text);
+            }
+
+            @Override
+            protected boolean matchesSafely(RecipeListAdapter.RecipeViewHolder item) {
+                TextView nameTextView = (TextView) item.itemView.findViewById(R.id.recipe_name_text_view);
+                if (nameTextView == null) {
+                    return false;
+                }
+                return nameTextView.getText().toString().contains(text);
+            }
+        };
     }
 }
