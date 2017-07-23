@@ -44,6 +44,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public interface RecipeAdapterListener {
         void onStepClicked(long stepId, int position);
+        void onAsyncDataLoaded();
     }
 
     public RecipeAdapter(RecipeAdapterListener recipeAdapterListener) {
@@ -127,6 +128,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             mData.add(firstPosition, mIngredients);
             mData.addAll(mSteps);
             notifyDataSetChanged();
+            mListener.onAsyncDataLoaded();
         }
     }
 

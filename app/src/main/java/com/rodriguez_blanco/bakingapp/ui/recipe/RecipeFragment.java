@@ -8,6 +8,7 @@ import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rodriguez_blanco.bakingapp.R;
@@ -38,6 +40,7 @@ import timber.log.Timber;
 public class RecipeFragment extends LifecycleFragment implements RecipeAdapter.RecipeAdapterListener {
     private static final String PARAM_RECIPE_ID = "param_recipe_id";
     private static final String INSTANCE_SELECTED_POSITION = "saved_selected_position";
+    private static final String INSTANCE_LAYOUT_MANAGER = "saved_layout_manager";
 
     @Inject
     RecipeViewModel mViewModel;
@@ -45,6 +48,8 @@ public class RecipeFragment extends LifecycleFragment implements RecipeAdapter.R
     @BindView(R.id.recipe_recycler_view)
     RecyclerView mRecipeRecyclerView;
     private RecipeAdapter mRecipeAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
+    private Parcelable mLayoutManagerSavedState;
 
     private Unbinder unbinder;
 
@@ -102,7 +107,7 @@ public class RecipeFragment extends LifecycleFragment implements RecipeAdapter.R
             mSelectedItem = savedInstanceState.getInt(INSTANCE_SELECTED_POSITION);
         }
 
-        setupRecyclerView();
+        setupRecyclerView(savedInstanceState);
         loadRecipe(getParamRecipeId());
     }
 
@@ -110,16 +115,24 @@ public class RecipeFragment extends LifecycleFragment implements RecipeAdapter.R
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(INSTANCE_SELECTED_POSITION, mSelectedItem);
+        outState.putParcelable(INSTANCE_LAYOUT_MANAGER, mRecipeRecyclerView.getLayoutManager().onSaveInstanceState());
     }
 
-    private void setupRecyclerView() {
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_LAYOUT_MANAGER)) {
+            mLayoutManagerSavedState = savedInstanceState.getParcelable(INSTANCE_LAYOUT_MANAGER);
+        }
+    }
+
+    private void setupRecyclerView(Bundle savedInstanceState) {
         Context context = getActivity();
         int orientation = LinearLayoutManager.VERTICAL;
         boolean isReverseLayout = false;
 
-        LinearLayoutManager linearLayoutManager
-                = new LinearLayoutManager(context, orientation, isReverseLayout);
-        mRecipeRecyclerView.setLayoutManager(linearLayoutManager);
+        mLinearLayoutManager = new LinearLayoutManager(context, orientation, isReverseLayout);
+        mRecipeRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecipeRecyclerView.setHasFixedSize(true);
         mRecipeAdapter = new RecipeAdapter(this);
         mRecipeRecyclerView.setAdapter(mRecipeAdapter);
@@ -168,5 +181,13 @@ public class RecipeFragment extends LifecycleFragment implements RecipeAdapter.R
     @Override
     public void onStepClicked(long stepId, int position) {
         mListener.onStepClicked(stepId, position);
+    }
+
+    @Override
+    public void onAsyncDataLoaded() {
+        if (mLinearLayoutManager != null && mLayoutManagerSavedState != null) {
+            mLinearLayoutManager.onRestoreInstanceState(mLayoutManagerSavedState);
+        }
+
     }
 }
