@@ -21,9 +21,9 @@ import android.widget.RelativeLayout;
 
 import com.rodriguez_blanco.bakingapp.R;
 import com.rodriguez_blanco.bakingapp.domain.Step;
-import com.rodriguez_blanco.bakingapp.ui.recipe.RecipeFragment;
 import com.rodriguez_blanco.bakingapp.viewmodel.StepViewPagerViewModel;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -130,6 +130,7 @@ public class StepViewPagerFragment extends LifecycleFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeViewPager();
+
         loadStep(getParamRecipeId(), getParamStepId(), savedInstanceState);
     }
 
@@ -138,13 +139,16 @@ public class StepViewPagerFragment extends LifecycleFragment {
         mViewPager.setAdapter(mPagerAdapter);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            int currentPosition = 0;
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
+                ((StepFragment) mPagerAdapter.getItem(currentPosition)).pausePlayer();
+                currentPosition = position;
                 setNavigationButtonsVisibility(position);
                 if (mListener != null) {
                     mListener.onStepSelected(position);
@@ -153,7 +157,6 @@ public class StepViewPagerFragment extends LifecycleFragment {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }
@@ -226,12 +229,16 @@ public class StepViewPagerFragment extends LifecycleFragment {
 
         private List<Step> mSteps;
 
+        private HashMap<Integer,StepFragment> mFragments;
+
         public StepsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
+
         public void setStepsData(List<Step> steps) {
             mSteps = steps;
+            mFragments = null;
             notifyDataSetChanged();
         }
 
@@ -239,7 +246,13 @@ public class StepViewPagerFragment extends LifecycleFragment {
         public Fragment getItem(int position) {
             if (mSteps != null) {
                 Step step = mSteps.get(position);
-                return StepFragment.forStep(getParamRecipeId(),step.getId());
+                if (mFragments == null) {
+                    mFragments = new HashMap<>();
+                }
+                if (!mFragments.containsKey(position)) {
+                    mFragments.put(position, StepFragment.forStep(getParamRecipeId(),step.getId()));
+                }
+                return mFragments.get(position);
             }
 
             return null;

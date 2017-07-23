@@ -7,19 +7,12 @@ package com.rodriguez_blanco.bakingapp.ui.step;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -44,13 +37,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.rodriguez_blanco.bakingapp.R;
 import com.rodriguez_blanco.bakingapp.domain.Step;
-import com.rodriguez_blanco.bakingapp.ui.recipe.RecipeAdapter;
-import com.rodriguez_blanco.bakingapp.viewmodel.RecipeViewModel;
 import com.rodriguez_blanco.bakingapp.viewmodel.StepViewModel;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-
-import java.net.URI;
 
 import javax.inject.Inject;
 
@@ -58,7 +45,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.AndroidSupportInjection;
-import timber.log.Timber;
 
 public class StepFragment extends LifecycleFragment implements ExoPlayer.EventListener {
     private static final String PARAM_RECIPE_ID = "param_recipe_id";
@@ -145,6 +131,18 @@ public class StepFragment extends LifecycleFragment implements ExoPlayer.EventLi
 
     }
 
+    public void pausePlayer() {
+        if (mExoPlayer != null) {
+            mExoPlayer.setPlayWhenReady(false);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        releasePlayer();
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -166,7 +164,6 @@ public class StepFragment extends LifecycleFragment implements ExoPlayer.EventLi
             mExoPlayer = ExoPlayerFactory.newSimpleInstance(rf, trackSelector, loadControl);
             mVideoPlayerView.setPlayer(mExoPlayer);
 
-            // Set the ExoPlayer.EventListener to this activity.
             mExoPlayer.addListener(this);
 
             // Prepare the MediaSource.
